@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Őrült Bot</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#111827,#312e81);
+  color:white;
+  min-height:100vh;
+  padding:15px;
+  -webkit-tap-highlight-color:transparent;
+}
+.game{
+  max-width:600px;
+  margin:auto;
+}
+h1{
+  text-align:center;
+  font-size:32px;
+  margin:8px 0;
+}
+.subtitle{
+  text-align:center;
+  opacity:.75;
+  margin-bottom:15px;
+}
+.card{
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:25px;
+  padding:18px;
+  margin-bottom:15px;
+  backdrop-filter:blur(10px);
+}
+.bot-area{
+  text-align:center;
+  min-height:360px;
+  position:relative;
+  overflow:hidden;
+}
+.bot{
+  width:190px;
+  height:290px;
+  margin:10px auto;
+  position:relative;
+  transition:.4s;
+}
+.head{
+  width:125px;
+  height:125px;
+  background:#ffd2ad;
+  border-radius:50%;
+  position:absolute;
+  top:5px;
+  left:33px;
+  border:5px solid #222;
+  z-index:3;
+}
+.hair{
+  position:absolute;
+  width:130px;
+  height:55px;
+  top:-8px;
+  left:-7px;
+  background:#321f16;
+  border-radius:65px 65px 25px 25px;
+}
+.eye{
+  position:absolute;
+  width:14px;
+  height:18px;
+  background:#111;
+  border-radius:50%;
+  top:55px;
+}
+.eye.left{left:32px}
+.eye.right{right:32px}
+.mouth{
+  position:absolute;
+  width:40px;
+  height:18px;
+  border-bottom:5px solid #111;
+  border-radius:50%;
+  left:38px;
+  top:85px;
+}
+.body{
+  position:absolute;
+  top:120px;
+  left:30px;
+  width:130px;
+  height:125px;
+  background:#2563eb;
+  border:5px solid #222;
+  border-radius:30px 30px 15px 15px;
+}
+.arm{
+  position:absolute;
+  width:35px;
+  height:105px;
+  background:#ffd2ad;
+  border:5px solid #222;
+  border-radius:25px;
+  top:130px;
+}
+.arm.left{left:0;transform:rotate(12deg)}
+.arm.right{right:0;transform:rotate(-12deg)}
+.leg{
+  position:absolute;
+  width:42px;
+  height:75px;
+  background:#111827;
+  border:5px solid #222;
+  top:235px;
+  border-radius:10px;
+}
+.leg.left{left:45px}
+.leg.right{right:45px}
+.status{
+  font-size:21px;
+  font-weight:bold;
+  min-height:30px;
+}
+.energy{
+  margin:10px auto;
+  max-width:300px;
+  height:14px;
+  background:#111;
+  border-radius:20px;
+  overflow:hidden;
+}
+.energy div{
+  height:100%;
+  width:100%;
+  background:#22c55e;
+  transition:.3s;
+}
+.tabs{
+  display:flex;
+  gap:8px;
+}
+button{
+  border:0;
+  border-radius:16px;
+  padding:15px 12px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  touch-action:manipulation;
+  user-select:none;
+}
+.tab{
+  flex:1;
+  background:#374151;
+  color:white;
+}
+.tab.active{background:#7c3aed}
+input{
+  width:100%;
+  padding:16px;
+  border-radius:15px;
+  border:0;
+  font-size:17px;
+  margin-bottom:10px;
+  outline:none;
+}
+.send{
+  width:100%;
+  background:#22c55e;
+  color:white;
+}
+.food{
+  background:#f59e0b;
+  color:#111;
+}
+.answer{
+  margin-top:12px;
+  padding:14px;
+  background:rgba(0,0,0,.25);
+  border-radius:15px;
+  min-height:55px;
+}
+.achievements{
+  display:none;
+}
+.achievement{
+  padding:12px;
+  margin:7px 0;
+  border-radius:14px;
+  background:rgba(255,255,255,.08);
+}
+.unlocked{
+  background:rgba(34,197,94,.25);
+}
+.log{
+  max-height:180px;
+  overflow:auto;
+  font-size:14px;
+  opacity:.9;
+}
+.shake{
+  animation:shake .35s;
+}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-12px)}
+  75%{transform:translateX(12px)}
+}
+.jump{
+  animation:jump .6s;
+}
+@keyframes jump{
+  50%{transform:translateY(-45px)}
+}
+.spin{
+  animation:spin .8s;
+}
+@keyframes spin{
+  100%{transform:rotate(360deg)}
+}
+.big{
+  transform:scale(1.15);
+}
+</style>
+</head>
+
+<body>
+<div class="game">
+
+<h1>🤪 ŐRÜLT BOT</h1>
+<div class="subtitle">Etess meg... ha mersz! 😂</div>
+
+<div class="card bot-area">
+  <div id="bot" class="bot">
+    <div class="head">
+      <div class="hair"></div>
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+      <div id="mouth" class="mouth"></div>
+    </div>
+    <div class="body"></div>
+    <div class="arm left"></div>
+    <div class="arm right"></div>
+    <div class="leg left"></div>
+    <div class="leg right"></div>
+  </div>
+
+  <div id="status" class="status">Szia! Mit akarsz? 😐</div>
+
+  <div class="energy">
+    <div id="energy"></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="tabs">
+    <button id="questionTab" class="tab active">💬 Kérdezés</button>
+    <button id="foodTab" class="tab">🍕 Etetés</button>
+    <button id="achTab" class="tab">🏆 Díjak</button>
+  </div>
+</div>
+
+<div id="questionPanel" class="card">
+  <input id="questionInput" placeholder="Írj neki valamit...">
+  <button id="questionButton" class="send">💬 KÉRDEZÉS</button>
+  <div id="questionAnswer" class="answer">A bot várja a kérdésedet...</div>
+</div>
+
+<div id="foodPanel" class="card" style="display:none">
+  <input id="foodInput" placeholder="Mit adsz neki? Pl. pizza, WC leves...">
+  <button id="foodButton" class="food">🍽️ ODAADOM</button>
+  <div id="foodAnswer" class="answer">Adj neki valamit! 😈</div>
+</div>
+
+<div id="achPanel" class="card achievements">
+  <h2>🏆 Achievementek</h2>
+  <div id="achievements"></div>
+</div>
+
+<div class="card">
+  <b>📜 Eseménynapló</b>
+  <div id="log" class="log"></div>
+</div>
+
+</div>
+
+<script>
+const bot=document.getElementById("bot");
+const statusText=document.getElementById("status");
+const energy=document.getElementById("energy");
+const questionInput=document.getElementById("questionInput");
+const foodInput=document.getElementById("foodInput");
+const questionAnswer=document.getElementById("questionAnswer");
+const foodAnswer=document.getElementById("foodAnswer");
+const logBox=document.getElementById("log");
+
+let energyValue=100;
+let foodCount=0;
+let questionCount=0;
+let transformations=0;
+
+const achievements=[
+ {id:"firstQuestion",name:"💬 Első kérdés",done:false},
+ {id:"firstFood",name:"🍕 Első etetés",done:false},
+ {id:"wc",name:"🚽 WC leves",done:false},
+ {id:"weird",name:"🤪 Őrült kaja",done:false},
+ {id:"five",name:"🍽️ Ötször megetetted",done:false},
+ {id:"ten",name:"🔥 Tíz dolgot adtál neki",done:false}
+];
+
+function log(text){
+ const p=document.createElement("div");
+ p.textContent="• "+text;
+ logBox.prepend(p);
+}
+
+function animate(type){
+ bot.classList.remove("shake","jump","spin","big");
+ void bot.offsetWidth;
+ bot.classList.add(type);
+}
+
+function setStatus(text){
+ statusText.textContent=text;
+}
+
+function updateEnergy(){
+ energy.style.width=energyValue+"%";
+ if(energyValue<30) energy.style.background="#ef4444";
+ else if(energyValue<60) energy.style.background="#f59e0b";
+ else energy.style.background="#22c55e";
+}
+
+function unlock(id){
+ const a=achievements.find(x=>x.id===id);
+ if(a && !a.done){
+   a.done=true;
+   log("🏆 Achievement: "+a.name);
+   renderAchievements();
+ }
+}
+
+function renderAchievements(){
+ const box=document.getElementById("achievements");
+ box.innerHTML="";
+ achievements.forEach(a=>{
+   const div=document.createElement("div");
+   div.className="achievement "+(a.done?"unlocked":"");
+   div.textContent=(a.done?"✅ ":"🔒 ")+a.name;
+   box.appendChild(div);
+ });
+}
+
+function ask(){
+ const q=questionInput.value.trim();
+ if(!q)return;
+
+ questionCount++;
+ unlock("firstQuestion");
+
+ const x=q.toLowerCase();
+ let answer;
+
+ if(x.includes("hogy vagy")||x.includes("hogy vagy?"))
+   answer="Jól vagyok... szerintem. 😐";
+ else if(x.includes("szeretsz"))
+   answer="Én egy bot vagyok, haver. 🤖";
+ else if(x.includes("pizza"))
+   answer="PIZZAAAAA! 🍕";
+ else if(x.includes("naruto"))
+   answer="Datte... ööö... inkább hagyjuk. 😂";
+ else if(x.includes("minecraft"))
+   answer="Creeper? AWWW MAN! 💥";
+ else if(x.includes("ki vagy"))
+   answer="Én vagyok az ŐRÜLT BOT! 🤪";
+ else if(x.includes("igen"))
+   answer="BIZTOS HOGY IGEN! 😎";
+ else if(x.includes("nem"))
+   answer="BIZTOS HOGY NEM! 😡";
+ else
+   answer="Hmmm... erre most nagyon komolyan azt mondom: DEHOGYIS! 😂";
+
+ questionAnswer.textContent=answer;
+ setStatus(answer);
+ animate("jump");
+ log("💬 Te: "+q);
+ log("🤖 Bot: "+answer);
+ questionInput.value="";
+}
+
+function eat(){
+ const food=foodInput.value.trim();
+ if(!food)return;
+
+ foodCount++;
+ energyValue=Math.max(0,energyValue-4);
+ updateEnergy();
+
+ const x=food.toLowerCase();
+ let reaction="";
+
+ if(
+   x.includes("wc")||
+   x.includes("vécé")||
+   x.includes("vece")||
+   x.includes("toilet")||
+   x.includes("wc leves")
+ ){
+   reaction="🚽 NEKEM WC LEVEST ADTÁL?!";
+   setStatus("🚽 WC-VÉ VÁLTOZTAM!");
+   foodAnswer.textContent=reaction;
+   bot.textContent="🚽";
+   bot.style.fontSize="150px";
+   bot.style.display="flex";
+   bot.style.alignItems="center";
+   bot.style.justifyContent="center";
+   transformations++;
+   unlock("wc");
+   unlock("weird");
+   animate("spin");
+ }
+ else if(x.includes("béka")||x.includes("beka")){
+   reaction="🐸 BREKEKE! MOST BÉKA VAGYOK!";
+   transform("🐸",reaction);
+ }
+ else if(x.includes("alien")||x.includes("ufó")||x.includes("ufo")){
+   reaction="👽 FÖLDLAKÓK! ELKAPTATOK!";
+   transform("👽",reaction);
+ }
+ else if(x.includes("robot")){
+   reaction="🤖 BEEP BOOP! ROBOT MÓD!";
+   transform("🤖",reaction);
+ }
+ else if(x.includes("arany")||x.includes("gold")){
+   reaction="👑 ARANYKIRÁLY LETTEM!";
+   transform("👑",reaction);
+ }
+ else if(x.includes("kő")||x.includes("ko")||x.includes("szikla")){
+   reaction="🪨 MOST MÁR KŐBŐL VAGYOK!";
+   transform("🪨",reaction);
+ }
+ else if(x.includes("jég")||x.includes("jeg")){
+   reaction="🧊 BRRRR! MEGFAGYTAM!";
+   transform("🧊",reaction);
+ }
+ else if(x.includes("felhő")||x.includes("felho")){
+   reaction="☁️ FELHŐ LETTEM!";
+   transform("☁️",reaction);
+ }
+ else if(x.includes("banán")||x.includes("banan")){
+   reaction="🍌 NYAMM! BANÁN POWER!";
+   setStatus(reaction);
+   foodAnswer.textContent=reaction;
+   animate("jump");
+ }
+ else if(x.includes("pizza")){
+   reaction="🍕 EZ A LEGJOBB DOLOG A VILÁGON!";
+   setStatus(reaction);
+   foodAnswer.textContent=reaction;
+   animate("big");
+ }
+ else if(x.includes("fű")||x.includes("fu")){
+   reaction="🌱 MIÉRT ETETSZ FŰVEL?!";
+   setStatus(reaction);
+   foodAnswer.textContent=reaction;
+   animate("shake");
+ }
+ else{
+   reaction="🤨 Megkóstoltam: "+food+"... érdekes.";
+   setStatus(reaction);
+   foodAnswer.textContent=reaction;
+   animate("shake");
+ }
+
+ unlock("firstFood");
+ if(foodCount>=5)unlock("five");
+ if(foodCount>=10)unlock("ten");
+
+ log("🍽️ Ezt adtad: "+food);
+ log("🤖 Reakció: "+reaction);
+
+ foodInput.value="";
+}
+
+function transform(emoji,reaction){
+ bot.innerHTML=emoji;
+ bot.style.fontSize="150px";
+ bot.style.display="flex";
+ bot.style.alignItems="center";
+ bot.style.justifyContent="center";
+ setStatus(reaction);
+ foodAnswer.textContent=reaction;
+ transformations++;
+ unlock("weird");
+ animate("spin");
+}
+
+function resetBot(){
+ location.reload();
+}
+
+document.getElementById("questionButton").addEventListener("click",ask);
+document.getElementById("foodButton").addEventListener("click",eat);
+
+questionInput.addEventListener("keydown",e=>{
+ if(e.key==="Enter")ask();
+});
+
+foodInput.addEventListener("keydown",e=>{
+ if(e.key==="Enter")eat();
+});
+
+document.getElementById("questionTab").addEventListener("click",()=>{
+ document.getElementById("questionPanel").style.display="block";
+ document.getElementById("foodPanel").style.display="none";
+ document.getElementById("achPanel").style.display="none";
+ document.getElementById("questionTab").classList.add("active");
+ document.getElementById("foodTab").classList.remove("active");
+ document.getElementById("achTab").classList.remove("active");
+});
+
+document.getElementById("foodTab").addEventListener("click",()=>{
+ document.getElementById("questionPanel").style.display="none";
+ document.getElementById("foodPanel").style.display="block";
+ document.getElementById("achPanel").style.display="none";
+ document.getElementById("foodTab").classList.add("active");
+ document.getElementById("questionTab").classList.remove("active");
+ document.getElementById("achTab").classList.remove("active");
+});
+
+document.getElementById("achTab").addEventListener("click",()=>{
+ document.getElementById("questionPanel").style.display="none";
+ document.getElementById("foodPanel").style.display="none";
+ document.getElementById("achPanel").style.display="block";
+ document.getElementById("achTab").classList.add("active");
+ document.getElementById("questionTab").classList.remove("active");
+ document.getElementById("foodTab").classList.remove("active");
+ renderAchievements();
+});
+
+updateEnergy();
+renderAchievements();
+log("🤖 Az Őrült Bot felébredt!");
+</script>
+
+</body>
+</html>
