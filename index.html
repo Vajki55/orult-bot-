@@ -2,552 +2,429 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Őrült Bot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Őrült Bot 🤖</title>
 
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#111827,#312e81);
-  color:white;
-  min-height:100vh;
-  padding:15px;
-  -webkit-tap-highlight-color:transparent;
+* {
+  box-sizing: border-box;
 }
-.game{
-  max-width:600px;
-  margin:auto;
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#17172b,#302052);
+  color: white;
+  min-height: 100vh;
 }
-h1{
-  text-align:center;
-  font-size:32px;
-  margin:8px 0;
+
+.container {
+  max-width: 650px;
+  margin: auto;
+  padding: 15px;
 }
-.subtitle{
-  text-align:center;
-  opacity:.75;
-  margin-bottom:15px;
+
+h1 {
+  text-align: center;
+  font-size: 30px;
+  margin: 10px 0 5px;
 }
-.card{
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:25px;
-  padding:18px;
-  margin-bottom:15px;
-  backdrop-filter:blur(10px);
+
+.subtitle {
+  text-align: center;
+  opacity: .7;
+  margin-bottom: 15px;
 }
-.bot-area{
-  text-align:center;
-  min-height:360px;
-  position:relative;
-  overflow:hidden;
+
+.panel {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 20px;
+  padding: 15px;
+  margin-bottom: 15px;
+  backdrop-filter: blur(10px);
 }
-.bot{
-  width:190px;
-  height:290px;
-  margin:10px auto;
-  position:relative;
-  transition:.4s;
+
+.bot-area {
+  height: 330px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
-.head{
-  width:125px;
-  height:125px;
-  background:#ffd2ad;
-  border-radius:50%;
-  position:absolute;
-  top:5px;
-  left:33px;
-  border:5px solid #222;
-  z-index:3;
+
+.bot {
+  width: 135px;
+  height: 210px;
+  position: relative;
+  transition: .4s;
 }
-.hair{
-  position:absolute;
-  width:130px;
-  height:55px;
-  top:-8px;
-  left:-7px;
-  background:#321f16;
-  border-radius:65px 65px 25px 25px;
+
+.head {
+  width: 110px;
+  height: 110px;
+  background: #f1bd91;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 12px;
+  z-index: 3;
+  box-shadow: inset 0 -8px rgba(0,0,0,.08);
 }
-.eye{
-  position:absolute;
-  width:14px;
-  height:18px;
-  background:#111;
-  border-radius:50%;
-  top:55px;
+
+.hair {
+  width: 105px;
+  height: 42px;
+  background: #33251e;
+  border-radius: 60px 60px 20px 20px;
+  position: absolute;
+  top: -4px;
+  left: 15px;
+  z-index: 4;
 }
-.eye.left{left:32px}
-.eye.right{right:32px}
-.mouth{
-  position:absolute;
-  width:40px;
-  height:18px;
-  border-bottom:5px solid #111;
-  border-radius:50%;
-  left:38px;
-  top:85px;
+
+.eye {
+  width: 13px;
+  height: 13px;
+  background: #111;
+  border-radius: 50%;
+  position: absolute;
+  top: 48px;
 }
-.body{
-  position:absolute;
-  top:120px;
-  left:30px;
-  width:130px;
-  height:125px;
-  background:#2563eb;
-  border:5px solid #222;
-  border-radius:30px 30px 15px 15px;
+
+.eye.left { left: 30px; }
+.eye.right { right: 30px; }
+
+.mouth {
+  position: absolute;
+  width: 38px;
+  height: 17px;
+  border-bottom: 4px solid #111;
+  border-radius: 50%;
+  left: 36px;
+  top: 72px;
 }
-.arm{
-  position:absolute;
-  width:35px;
-  height:105px;
-  background:#ffd2ad;
-  border:5px solid #222;
-  border-radius:25px;
-  top:130px;
+
+.body {
+  width: 115px;
+  height: 115px;
+  background: #3867d6;
+  border-radius: 25px 25px 12px 12px;
+  position: absolute;
+  top: 98px;
+  left: 10px;
 }
-.arm.left{left:0;transform:rotate(12deg)}
-.arm.right{right:0;transform:rotate(-12deg)}
-.leg{
-  position:absolute;
-  width:42px;
-  height:75px;
-  background:#111827;
-  border:5px solid #222;
-  top:235px;
-  border-radius:10px;
+
+.arm {
+  width: 25px;
+  height: 90px;
+  background: #f1bd91;
+  border-radius: 20px;
+  position: absolute;
+  top: 110px;
 }
-.leg.left{left:45px}
-.leg.right{right:45px}
-.status{
-  font-size:21px;
-  font-weight:bold;
-  min-height:30px;
+
+.arm.left {
+  left: -12px;
+  transform: rotate(15deg);
 }
-.energy{
-  margin:10px auto;
-  max-width:300px;
-  height:14px;
-  background:#111;
-  border-radius:20px;
-  overflow:hidden;
+
+.arm.right {
+  right: -12px;
+  transform: rotate(-15deg);
 }
-.energy div{
-  height:100%;
-  width:100%;
-  background:#22c55e;
-  transition:.3s;
+
+.legs {
+  display: flex;
+  gap: 12px;
+  position: absolute;
+  top: 200px;
+  left: 37px;
 }
-.tabs{
-  display:flex;
-  gap:8px;
+
+.leg {
+  width: 28px;
+  height: 55px;
+  background: #222;
+  border-radius: 0 0 12px 12px;
 }
-button{
-  border:0;
-  border-radius:16px;
-  padding:15px 12px;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
-  touch-action:manipulation;
-  user-select:none;
+
+#formEmoji {
+  position: absolute;
+  font-size: 105px;
+  z-index: 10;
+  display: none;
 }
-.tab{
-  flex:1;
-  background:#374151;
-  color:white;
+
+.status {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  min-height: 28px;
 }
-.tab.active{background:#7c3aed}
-input{
-  width:100%;
-  padding:16px;
-  border-radius:15px;
-  border:0;
-  font-size:17px;
-  margin-bottom:10px;
-  outline:none;
+
+.energy {
+  background: #111;
+  height: 15px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 10px;
 }
-.send{
-  width:100%;
-  background:#22c55e;
-  color:white;
+
+.energyBar {
+  height: 100%;
+  width: 100%;
+  background: #48db71;
+  transition: .3s;
 }
-.food{
-  background:#f59e0b;
-  color:#111;
+
+.tabs {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 10px;
 }
-.answer{
-  margin-top:12px;
-  padding:14px;
-  background:rgba(0,0,0,.25);
-  border-radius:15px;
-  min-height:55px;
+
+.tab {
+  flex: 1;
+  border: none;
+  padding: 12px 5px;
+  border-radius: 12px;
+  background: #24243c;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
-.achievements{
-  display:none;
+
+.tab.active {
+  background: #5f3dc4;
 }
-.achievement{
-  padding:12px;
-  margin:7px 0;
-  border-radius:14px;
-  background:rgba(255,255,255,.08);
+
+.page {
+  display: none;
 }
-.unlocked{
-  background:rgba(34,197,94,.25);
+
+.page.active {
+  display: block;
 }
-.log{
-  max-height:180px;
-  overflow:auto;
-  font-size:14px;
-  opacity:.9;
+
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 13px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  margin-bottom: 9px;
 }
-.shake{
-  animation:shake .35s;
+
+button.main {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 13px;
+  background: #6c5ce7;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
-@keyframes shake{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(-12px)}
-  75%{transform:translateX(12px)}
+
+button.main:active {
+  transform: scale(.97);
 }
-.jump{
-  animation:jump .6s;
+
+.quick {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 8px;
+  margin-top: 10px;
 }
-@keyframes jump{
-  50%{transform:translateY(-45px)}
+
+.quick button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #29294a;
+  color: white;
+  cursor: pointer;
 }
-.spin{
-  animation:spin .8s;
+
+.log {
+  max-height: 180px;
+  overflow-y: auto;
+  font-size: 14px;
 }
-@keyframes spin{
-  100%{transform:rotate(360deg)}
+
+.log div {
+  padding: 7px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
-.big{
-  transform:scale(1.15);
+
+.achievement {
+  background: rgba(255,255,255,.07);
+  padding: 10px;
+  border-radius: 12px;
+  margin: 7px 0;
+}
+
+.unlocked {
+  border: 1px solid #ffd32a;
+}
+
+.small {
+  opacity: .7;
+  font-size: 13px;
 }
 </style>
 </head>
 
 <body>
-<div class="game">
 
-<h1>🤪 ŐRÜLT BOT</h1>
-<div class="subtitle">Etess meg... ha mersz! 😂</div>
+<div class="container">
 
-<div class="card bot-area">
-  <div id="bot" class="bot">
+<h1>🤖 ŐRÜLT BOT</h1>
+<div class="subtitle">Kérdezd, etesd meg, és nézd meg mivé változik! 😂</div>
+
+<div class="panel">
+
+<div class="bot-area">
+
+  <div class="bot" id="bot">
+    <div class="hair"></div>
+
     <div class="head">
-      <div class="hair"></div>
       <div class="eye left"></div>
       <div class="eye right"></div>
-      <div id="mouth" class="mouth"></div>
+      <div class="mouth"></div>
     </div>
+
     <div class="body"></div>
     <div class="arm left"></div>
     <div class="arm right"></div>
-    <div class="leg left"></div>
-    <div class="leg right"></div>
+
+    <div class="legs">
+      <div class="leg"></div>
+      <div class="leg"></div>
+    </div>
   </div>
 
-  <div id="status" class="status">Szia! Mit akarsz? 😐</div>
+  <div id="formEmoji">🤖</div>
 
-  <div class="energy">
-    <div id="energy"></div>
-  </div>
 </div>
 
-<div class="card">
-  <div class="tabs">
-    <button id="questionTab" class="tab active">💬 Kérdezés</button>
-    <button id="foodTab" class="tab">🍕 Etetés</button>
-    <button id="achTab" class="tab">🏆 Díjak</button>
-  </div>
+<div class="status" id="status">
+  Szia! Mit akarsz tőlem? 😎
 </div>
 
-<div id="questionPanel" class="card">
-  <input id="questionInput" placeholder="Írj neki valamit...">
-  <button id="questionButton" class="send">💬 KÉRDEZÉS</button>
-  <div id="questionAnswer" class="answer">A bot várja a kérdésedet...</div>
+<div class="energy">
+  <div class="energyBar" id="energyBar"></div>
 </div>
 
-<div id="foodPanel" class="card" style="display:none">
-  <input id="foodInput" placeholder="Mit adsz neki? Pl. pizza, WC leves...">
-  <button id="foodButton" class="food">🍽️ ODAADOM</button>
-  <div id="foodAnswer" class="answer">Adj neki valamit! 😈</div>
 </div>
 
-<div id="achPanel" class="card achievements">
-  <h2>🏆 Achievementek</h2>
-  <div id="achievements"></div>
+<div class="panel">
+
+<div class="tabs">
+  <button class="tab active" onclick="showPage('question',this)">💬 Kérdezés</button>
+  <button class="tab" onclick="showPage('food',this)">🍕 Etetés</button>
+  <button class="tab" onclick="showPage('awards',this)">🏆 Díjak</button>
 </div>
 
-<div class="card">
-  <b>📜 Eseménynapló</b>
-  <div id="log" class="log"></div>
+<div id="question" class="page active">
+
+<input id="questionInput" placeholder="Írj neki valamit...">
+
+<button class="main" onclick="askBot()">
+🤖 KÉRDEZD AZ AI-T
+</button>
+
+<div class="quick">
+<button onclick="quickQuestion('Szereted a pizzát?')">🍕 Pizza?</button>
+<button onclick="quickQuestion('Ki vagy?')">❓ Ki vagy?</button>
+<button onclick="quickQuestion('Mi a kedvenc kajád?')">🍔 Kedvenc kaja?</button>
+<button onclick="quickQuestion('Mit csinálsz?')">🤔 Mit csinálsz?</button>
+</div>
+
+</div>
+
+<div id="food" class="page">
+
+<input id="foodInput" placeholder="Írd be, mit adsz neki...">
+
+<button class="main" onclick="feedBot()">
+🍽️ ODAADOM
+</button>
+
+<p class="small">
+Írj be bármit! A különleges kaják átváltoztatják a botot. 👀
+</p>
+
+<div class="quick">
+<button onclick="quickFood('pokoli chili')">🌶️ Pokoli chili</button>
+<button onclick="quickFood('cóliárt')">😇 Cóliárt</button>
+<button onclick="quickFood('holdtorta')">🌙 Holdtorta</button>
+<button onclick="quickFood('nappalacsinta')">☀️ Nappalacsinta</button>
+<button onclick="quickFood('UFO-süti')">👽 UFO-süti</button>
+<button onclick="quickFood('légyburger')">🐸 Légyburger</button>
+<button onclick="quickFood('robotkeksz')">🤖 Robotkeksz</button>
+<button onclick="quickFood('aranyfánk')">👑 Aranyfánk</button>
+<button onclick="quickFood('jégkrém')">🧊 Jégkrém</button>
+<button onclick="quickFood('felhőcukor')">☁️ Felhőcukor</button>
+</div>
+
+</div>
+
+<div id="awards" class="page">
+
+<div class="achievement" id="a1">
+💬 <b>Első kérdés</b><br>
+<span class="small">Kérdezd meg először a botot.</span>
+</div>
+
+<div class="achievement" id="a2">
+🍕 <b>Első etetés</b><br>
+<span class="small">Adj neki valamit.</span>
+</div>
+
+<div class="achievement" id="a3">
+🚽 <b>WC?!</b><br>
+<span class="small">Változtasd vécévé.</span>
+</div>
+
+<div class="achievement" id="a4">
+😈 <b>Pokoli mód</b><br>
+<span class="small">Változtasd Luciferré.</span>
+</div>
+
+<div class="achievement" id="a5">
+😇 <b>Angyali mód</b><br>
+<span class="small">Add neki a cóliártot.</span>
+</div>
+
+<div class="achievement" id="a6">
+🌈 <b>Őrült gyűjtő</b><br>
+<span class="small">Érj el 10 átváltozást.</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+<b>📜 Eseménynapló</b>
+<div class="log" id="log"></div>
 </div>
 
 </div>
 
 <script>
-const bot=document.getElementById("bot");
-const statusText=document.getElementById("status");
-const energy=document.getElementById("energy");
-const questionInput=document.getElementById("questionInput");
-const foodInput=document.getElementById("foodInput");
-const questionAnswer=document.getElementById("questionAnswer");
-const foodAnswer=document.getElementById("foodAnswer");
-const logBox=document.getElementById("log");
 
-let energyValue=100;
-let foodCount=0;
-let questionCount=0;
-let transformations=0;
+let energy = 100;
+let questions = 0;
+let feedings = 0;
+let transformations = 0;
 
-const achievements=[
- {id:"firstQuestion",name:"💬 Első kérdés",done:false},
- {id:"firstFood",name:"🍕 Első etetés",done:false},
- {id:"wc",name:"🚽 WC leves",done:false},
- {id:"weird",name:"🤪 Őrült kaja",done:false},
- {id:"five",name:"🍽️ Ötször megetetted",done:false},
- {id:"ten",name:"🔥 Tíz dolgot adtál neki",done:false}
-];
-
-function log(text){
- const p=document.createElement("div");
- p.textContent="• "+text;
- logBox.prepend(p);
-}
-
-function animate(type){
- bot.classList.remove("shake","jump","spin","big");
- void bot.offsetWidth;
- bot.classList.add(type);
-}
-
-function setStatus(text){
- statusText.textContent=text;
-}
-
-function updateEnergy(){
- energy.style.width=energyValue+"%";
- if(energyValue<30) energy.style.background="#ef4444";
- else if(energyValue<60) energy.style.background="#f59e0b";
- else energy.style.background="#22c55e";
-}
-
-function unlock(id){
- const a=achievements.find(x=>x.id===id);
- if(a && !a.done){
-   a.done=true;
-   log("🏆 Achievement: "+a.name);
-   renderAchievements();
- }
-}
-
-function renderAchievements(){
- const box=document.getElementById("achievements");
- box.innerHTML="";
- achievements.forEach(a=>{
-   const div=document.createElement("div");
-   div.className="achievement "+(a.done?"unlocked":"");
-   div.textContent=(a.done?"✅ ":"🔒 ")+a.name;
-   box.appendChild(div);
- });
-}
-
-function ask(){
- const q=questionInput.value.trim();
- if(!q)return;
-
- questionCount++;
- unlock("firstQuestion");
-
- const x=q.toLowerCase();
- let answer;
-
- if(x.includes("hogy vagy")||x.includes("hogy vagy?"))
-   answer="Jól vagyok... szerintem. 😐";
- else if(x.includes("szeretsz"))
-   answer="Én egy bot vagyok, haver. 🤖";
- else if(x.includes("pizza"))
-   answer="PIZZAAAAA! 🍕";
- else if(x.includes("naruto"))
-   answer="Datte... ööö... inkább hagyjuk. 😂";
- else if(x.includes("minecraft"))
-   answer="Creeper? AWWW MAN! 💥";
- else if(x.includes("ki vagy"))
-   answer="Én vagyok az ŐRÜLT BOT! 🤪";
- else if(x.includes("igen"))
-   answer="BIZTOS HOGY IGEN! 😎";
- else if(x.includes("nem"))
-   answer="BIZTOS HOGY NEM! 😡";
- else
-   answer="Hmmm... erre most nagyon komolyan azt mondom: DEHOGYIS! 😂";
-
- questionAnswer.textContent=answer;
- setStatus(answer);
- animate("jump");
- log("💬 Te: "+q);
- log("🤖 Bot: "+answer);
- questionInput.value="";
-}
-
-function eat(){
- const food=foodInput.value.trim();
- if(!food)return;
-
- foodCount++;
- energyValue=Math.max(0,energyValue-4);
- updateEnergy();
-
- const x=food.toLowerCase();
- let reaction="";
-
- if(
-   x.includes("wc")||
-   x.includes("vécé")||
-   x.includes("vece")||
-   x.includes("toilet")||
-   x.includes("wc leves")
- ){
-   reaction="🚽 NEKEM WC LEVEST ADTÁL?!";
-   setStatus("🚽 WC-VÉ VÁLTOZTAM!");
-   foodAnswer.textContent=reaction;
-   bot.textContent="🚽";
-   bot.style.fontSize="150px";
-   bot.style.display="flex";
-   bot.style.alignItems="center";
-   bot.style.justifyContent="center";
-   transformations++;
-   unlock("wc");
-   unlock("weird");
-   animate("spin");
- }
- else if(x.includes("béka")||x.includes("beka")){
-   reaction="🐸 BREKEKE! MOST BÉKA VAGYOK!";
-   transform("🐸",reaction);
- }
- else if(x.includes("alien")||x.includes("ufó")||x.includes("ufo")){
-   reaction="👽 FÖLDLAKÓK! ELKAPTATOK!";
-   transform("👽",reaction);
- }
- else if(x.includes("robot")){
-   reaction="🤖 BEEP BOOP! ROBOT MÓD!";
-   transform("🤖",reaction);
- }
- else if(x.includes("arany")||x.includes("gold")){
-   reaction="👑 ARANYKIRÁLY LETTEM!";
-   transform("👑",reaction);
- }
- else if(x.includes("kő")||x.includes("ko")||x.includes("szikla")){
-   reaction="🪨 MOST MÁR KŐBŐL VAGYOK!";
-   transform("🪨",reaction);
- }
- else if(x.includes("jég")||x.includes("jeg")){
-   reaction="🧊 BRRRR! MEGFAGYTAM!";
-   transform("🧊",reaction);
- }
- else if(x.includes("felhő")||x.includes("felho")){
-   reaction="☁️ FELHŐ LETTEM!";
-   transform("☁️",reaction);
- }
- else if(x.includes("banán")||x.includes("banan")){
-   reaction="🍌 NYAMM! BANÁN POWER!";
-   setStatus(reaction);
-   foodAnswer.textContent=reaction;
-   animate("jump");
- }
- else if(x.includes("pizza")){
-   reaction="🍕 EZ A LEGJOBB DOLOG A VILÁGON!";
-   setStatus(reaction);
-   foodAnswer.textContent=reaction;
-   animate("big");
- }
- else if(x.includes("fű")||x.includes("fu")){
-   reaction="🌱 MIÉRT ETETSZ FŰVEL?!";
-   setStatus(reaction);
-   foodAnswer.textContent=reaction;
-   animate("shake");
- }
- else{
-   reaction="🤨 Megkóstoltam: "+food+"... érdekes.";
-   setStatus(reaction);
-   foodAnswer.textContent=reaction;
-   animate("shake");
- }
-
- unlock("firstFood");
- if(foodCount>=5)unlock("five");
- if(foodCount>=10)unlock("ten");
-
- log("🍽️ Ezt adtad: "+food);
- log("🤖 Reakció: "+reaction);
-
- foodInput.value="";
-}
-
-function transform(emoji,reaction){
- bot.innerHTML=emoji;
- bot.style.fontSize="150px";
- bot.style.display="flex";
- bot.style.alignItems="center";
- bot.style.justifyContent="center";
- setStatus(reaction);
- foodAnswer.textContent=reaction;
- transformations++;
- unlock("weird");
- animate("spin");
-}
-
-function resetBot(){
- location.reload();
-}
-
-document.getElementById("questionButton").addEventListener("click",ask);
-document.getElementById("foodButton").addEventListener("click",eat);
-
-questionInput.addEventListener("keydown",e=>{
- if(e.key==="Enter")ask();
-});
-
-foodInput.addEventListener("keydown",e=>{
- if(e.key==="Enter")eat();
-});
-
-document.getElementById("questionTab").addEventListener("click",()=>{
- document.getElementById("questionPanel").style.display="block";
- document.getElementById("foodPanel").style.display="none";
- document.getElementById("achPanel").style.display="none";
- document.getElementById("questionTab").classList.add("active");
- document.getElementById("foodTab").classList.remove("active");
- document.getElementById("achTab").classList.remove("active");
-});
-
-document.getElementById("foodTab").addEventListener("click",()=>{
- document.getElementById("questionPanel").style.display="none";
- document.getElementById("foodPanel").style.display="block";
- document.getElementById("achPanel").style.display="none";
- document.getElementById("foodTab").classList.add("active");
- document.getElementById("questionTab").classList.remove("active");
- document.getElementById("achTab").classList.remove("active");
-});
-
-document.getElementById("achTab").addEventListener("click",()=>{
- document.getElementById("questionPanel").style.display="none";
- document.getElementById("foodPanel").style.display="none";
- document.getElementById("achPanel").style.display="block";
- document.getElementById("achTab").classList.add("active");
- document.getElementById("questionTab").classList.remove("active");
- document.getElementById("foodTab").classList.remove("active");
- renderAchievements();
-});
-
-updateEnergy();
-renderAchievements();
-log("🤖 Az Őrült Bot felébredt!");
-</script>
-
-</body>
-</html>
+const statusText = document.getElementById("status");
+const formEmoji = document.getElementById("formEmoji");
+const bot = document.getElementById("bot");
+const
