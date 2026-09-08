@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Őrült Bot 🤖</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #17172b, #302052);
+  color: white;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 650px;
+  margin: auto;
+  padding: 15px;
+}
+
+h1 {
+  text-align: center;
+  margin: 10px 0 4px;
+  font-size: 30px;
+}
+
+.subtitle {
+  text-align: center;
+  opacity: .7;
+  margin-bottom: 15px;
+}
+
+.panel {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 20px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.bot-area {
+  height: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.bot {
+  width: 140px;
+  height: 220px;
+  position: relative;
+  transition: transform .4s;
+}
+
+.bot:hover {
+  transform: scale(1.03);
+}
+
+.head {
+  width: 110px;
+  height: 110px;
+  background: #f1bd91;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 15px;
+  z-index: 3;
+  box-shadow: inset 0 -8px rgba(0,0,0,.08);
+}
+
+.hair {
+  width: 106px;
+  height: 43px;
+  background: #33251e;
+  border-radius: 60px 60px 20px 20px;
+  position: absolute;
+  top: -4px;
+  left: 17px;
+  z-index: 4;
+}
+
+.eye {
+  width: 13px;
+  height: 13px;
+  background: #111;
+  border-radius: 50%;
+  position: absolute;
+  top: 48px;
+}
+
+.eye.left {
+  left: 30px;
+}
+
+.eye.right {
+  right: 30px;
+}
+
+.mouth {
+  width: 38px;
+  height: 17px;
+  border-bottom: 4px solid #111;
+  border-radius: 50%;
+  position: absolute;
+  left: 36px;
+  top: 72px;
+}
+
+.body {
+  width: 115px;
+  height: 115px;
+  background: #3867d6;
+  border-radius: 25px 25px 12px 12px;
+  position: absolute;
+  top: 98px;
+  left: 12px;
+}
+
+.arm {
+  width: 25px;
+  height: 90px;
+  background: #f1bd91;
+  border-radius: 20px;
+  position: absolute;
+  top: 110px;
+}
+
+.arm.left {
+  left: -9px;
+  transform: rotate(15deg);
+}
+
+.arm.right {
+  right: -9px;
+  transform: rotate(-15deg);
+}
+
+.legs {
+  display: flex;
+  gap: 12px;
+  position: absolute;
+  top: 200px;
+  left: 39px;
+}
+
+.leg {
+  width: 28px;
+  height: 55px;
+  background: #222;
+  border-radius: 0 0 12px 12px;
+}
+
+#formEmoji {
+  position: absolute;
+  font-size: 105px;
+  z-index: 10;
+  display: none;
+  text-align: center;
+}
+
+.status {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  min-height: 30px;
+  margin-top: 5px;
+}
+
+.energy {
+  background: #111;
+  height: 15px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.energyBar {
+  height: 100%;
+  width: 100%;
+  background: #48db71;
+  transition: .3s;
+}
+
+.tabs {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.tab {
+  flex: 1;
+  border: none;
+  padding: 12px 5px;
+  border-radius: 12px;
+  background: #24243c;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #6c5ce7;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 13px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  margin-bottom: 9px;
+}
+
+button.main {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 13px;
+  background: #6c5ce7;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.main:active,
+.quick button:active,
+.tab:active {
+  transform: scale(.97);
+}
+
+.quick {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.quick button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #29294a;
+  color: white;
+  cursor: pointer;
+}
+
+.log {
+  max-height: 180px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.log div {
+  padding: 7px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.achievement {
+  background: rgba(255,255,255,.07);
+  padding: 10px;
+  border-radius: 12px;
+  margin: 7px 0;
+}
+
+.unlocked {
+  border: 2px solid #ffd32a;
+}
+
+.small {
+  opacity: .7;
+  font-size: 13px;
+}
+
+.food-info {
+  margin-top: 12px;
+  text-align: center;
+  opacity: .75;
+}
+
+@media (max-width: 430px) {
+  h1 {
+    font-size: 26px;
+  }
+
+  .bot-area {
+    height: 290px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🤖 ŐRÜLT BOT</h1>
+
+<div class="subtitle">
+Kérdezd, etesd meg, és nézd meg, mivé változik! 😂
+</div>
+
+<div class="panel">
+
+<div class="bot-area">
+
+<div class="bot" id="bot">
+
+<div class="hair"></div>
+
+<div class="head">
+<div class="eye left"></div>
+<div class="eye right"></div>
+<div class="mouth"></div>
+</div>
+
+<div class="body"></div>
+
+<div class="arm left"></div>
+<div class="arm right"></div>
+
+<div class="legs">
+<div class="leg"></div>
+<div class="leg"></div>
+</div>
+
+</div>
+
+<div id="formEmoji">🤖</div>
+
+</div>
+
+<div class="status" id="status">
+Szia! Mit akarsz tőlem? 😎
+</div>
+
+<div class="energy">
+<div class="energyBar" id="energyBar"></div>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="tabs">
+
+<button class="tab active" onclick="showPage('question', this)">
+💬 Kérdezés
+</button>
+
+<button class="tab" onclick="showPage('food', this)">
+🍕 Etetés
+</button>
+
+<button class="tab" onclick="showPage('awards', this)">
+🏆 Díjak
+</button>
+
+</div>
+
+
+<div id="question" class="page active">
+
+<input
+id="questionInput"
+placeholder="Írj neki valamit..."
+onkeydown="if(event.key==='Enter') askBot()"
+>
+
+<button class="main" onclick="askBot()">
+🤖 KÉRDEZD AZ AI-T
+</button>
+
+<div class="quick">
+
+<button onclick="quickQuestion('Szereted a pizzát?')">
+🍕 Pizza?
+</button>
+
+<button onclick="quickQuestion('Ki vagy?')">
+❓ Ki vagy?
+</button>
+
+<button onclick="quickQuestion('Mi a kedvenc kajád?')">
+🍔 Kedvenc kaja?
+</button>
+
+<button onclick="quickQuestion('Mit csinálsz?')">
+🤔 Mit csinálsz?
+</button>
+
+</div>
+
+</div>
+
+
+<div id="food" class="page">
+
+<input
+id="foodInput"
+placeholder="Írd be, mit adsz neki..."
+onkeydown="if(event.key==='Enter') feedBot()"
+>
+
+<button class="main" onclick="feedBot()">
+🍽️ ODAADOM
+</button>
+
+<div class="food-info">
+Írj be bármit! A különleges kaják átváltoztatják a botot. 👀
+</div>
+
+<div class="quick">
+
+<button onclick="quickFood('pokoli chili')">
+🌶️ Pokoli chili
+</button>
+
+<button onclick="quickFood('cóliárt')">
+😇 Cóliárt
+</button>
+
+<button onclick="quickFood('holdtorta')">
+🌙 Holdtorta
+</button>
+
+<button onclick="quickFood('nappalacsinta')">
+☀️ Nappalacsinta
+</button>
+
+<button onclick="quickFood('UFO-süti')">
+👽 UFO-süti
+</button>
+
+<button onclick="quickFood('légyburger')">
+🐸 Légyburger
+</button>
+
+<button onclick="quickFood('robotkeksz')">
+🤖 Robotkeksz
+</button>
+
+<button onclick="quickFood('aranyfánk')">
+👑 Aranyfánk
+</button>
+
+<button onclick="quickFood('sziklaburger')">
+🪨 Sziklaburger
+</button>
+
+<button onclick="quickFood('jégkrém')">
+🧊 Jégkrém
+</button>
+
+<button onclick="quickFood('felhőcukor')">
+☁️ Felhőcukor
+</button>
+
+<button onclick="quickFood('vízgolyó')">
+🌊 Vízgolyó
+</button>
+
+</div>
+
+</div>
+
+
+<div id="awards" class="page">
+
+<div class="achievement" id="a1">
+💬 <b>Első kérdés</b><br>
+<span class="small">Kérdezd meg először a botot.</span>
+</div>
+
+<div class="achievement" id="a2">
+🍕 <b>Első etetés</b><br>
+<span class="small">Adj neki valamit.</span>
+</div>
+
+<div class="achievement" id="a3">
+🚽 <b>WC?!</b><br>
+<span class="small">Változtasd vécévé.</span>
+</div>
+
+<div class="achievement" id="a4">
+😈 <b>Pokoli mód</b><br>
+<span class="small">Változtasd Luciferré.</span>
+</div>
+
+<div class="achievement" id="a5">
+😇 <b>Angyali mód</b><br>
+<span class="small">Add neki a cóliártot.</span>
+</div>
+
+<div class="achievement" id="a6">
+🌈 <b>Őrült gyűjtő</b><br>
+<span class="small">Érj el 10 átváltozást.</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<b>📜 Eseménynapló</b>
+
+<div class="log" id="log"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+let energy = 100;
+let questions = 0;
+let feedings = 0;
+let transformations = 0;
+
+const statusText = document.getElementById("status");
+const formEmoji = document.getElementById("formEmoji");
+const bot = document.getElementById("bot");
+const energyBar = document.getElementById("energyBar");
+const log = document.getElementById("log");
+
+
+function showPage(page, button) {
+
+document.querySelectorAll(".page").forEach(function(p) {
+p.classList.remove("active");
+});
+
+document.querySelectorAll(".tab").forEach(function(b) {
+b.classList.remove("active");
+});
+
+document.getElementById(page).classList.add("active");
+button.classList.add("active");
+
+}
+
+
+function addLog(text) {
+
+const item = document.createElement("div");
+item.textContent = text;
+
+log.prepend(item);
+
+}
+
+
+function changeEnergy(amount) {
+
+energy += amount;
+
+if (energy > 100) energy = 100;
+if (energy < 0) energy = 0;
+
+energyBar.style.width = energy + "%";
+
+}
+
+
+function resetBotLook() {
+
+bot.style.display = "block";
+formEmoji.style.display = "none";
+
+}
+
+
+function transform(emoji, name, message) {
+
+transformations++;
+
+bot.style.display = "none";
+
+formEmoji.textContent = emoji;
+formEmoji.style.display = "block";
+
+statusText.textContent = message;
+
+addLog("🔄 Átváltozás: " + name + " " + emoji);
+
+if (transformations >= 10) {
+unlock("a6");
+}
+
+}
+
+
+function unlock(id) {
+
+const el = document.getElementById(id);
+
+if (el && !el.classList.contains("unlocked")) {
+
+el.classList.add("unlocked");
+
+addLog("🏆 Díj feloldva!");
+
+}
+
+}
+
+
+/*
+=========================================
+KÉRDEZÉS
+=========================================
+*/
+
+function askBot() {
+
+const input = document.getElementById("questionInput");
+
+const text = input.value.trim();
+
+if (!text) {
+statusText.textContent = "Írj valamit! 😭";
+return;
+}
+
+questions++;
+
+unlock("a1");
+
+changeEnergy(-3);
+
+let answer;
+
+const t = text.toLowerCase();
+
+if (
+t.includes("ki vagy") ||
+t.includes("ki vagy te")
+) {
+
+answer = "Én vagyok az ŐRÜLT BOT! 🤖🔥";
+
+}
+
+else if (
+t.includes("szereted") &&
+t.includes("pizza")
+) {
+
+answer = "A PIZZA A LEGNAGYOBB TALÁLMÁNY! 🍕🤤";
+
+}
+
+else if (
+t.includes("kedvenc") &&
+t.includes("kaja")
+) {
+
+answer = "Attól függ, mit adsz nekem... 👀🍔";
+
+}
+
+else if (
+t.includes("mit csinálsz")
+) {
+
+answer = "Várom, hogy valami teljesen hülyeséget adj nekem. 😂";
+
+}
+
+else if (
+t.includes("hello") ||
+t.includes("szia")
+) {
+
+answer = "SZIAAA! 🤖👋";
+
+}
+
+else if (
+t.includes("hogy vagy")
+) {
+
+answer = "100%-on vagyok... egyelőre. 😎";
+
+}
+
+else if (
+t.includes("unalmas")
+) {
+
+answer = "AKKOR ADJ NEKEM VALAMI ŐRÜLT KAJÁT! 😤";
+
+}
+
+else {
+
+const answers = [
+
+"Ez egy nagyon érdekes kérdés... 🤔",
+
+"Nem tudom, de jól hangzik! 😂",
+
+"Erre még az én AI-agyam sem készült fel. 🤖",
+
+"Biztos vagy benne, hogy ezt meg akarod kérdezni? 👀",
+
+"HMMMM... gondolkodom... 🧠",
+
+"42. Ne kérdezd, miért. 😂",
+
+"Én inkább ennék valamit. 🍕",
+
+"Ez gyanúsan furcsa kérdés. 😳"
+
+];
+
+answer = answers[Math.floor(Math.random() * answers.length)];
+
+}
+
+statusText.textContent = answer;
+
+addLog("💬 Te: " + text);
+addLog("🤖 Bot: " + answer);
+
+input.value = "";
+
+}
+
+
+function quickQuestion(text) {
+
+document.getElementById("questionInput").value = text;
+
+askBot();
+
+}
+
+
+/*
+=========================================
+ETETÉS
+=========================================
+*/
+
+function feedBot() {
+
+const input = document.getElementById("foodInput");
+
+const food = input.value.trim();
+
+if (!food) {
+
+statusText.textContent = "Adj nekem valamit! 🍕😭";
+
+return;
+
+}
+
+feedings++;
+
+unlock("a2");
+
+changeEnergy(5);
+
+const t = food
+.toLowerCase()
+.normalize("NFD")
+.replace(/[\u0300-\u036f]/g, "");
+
+
+/*
+=========================================
+ÁTALAKULÁSOK
+=========================================
+*/
+
+if (
+t === "pokoli chili" ||
+t.includes("pokoli chili")
+) {
+
+transform(
+"😈",
+"Lucifer",
+"AAAA! EZ POKOLI CHILI! ÉN VAGYOK LUCIFER! 😈🔥"
+);
+
+unlock("a4");
+
+}
+
+
+else if (
+t === "coliart" ||
+t === "coliárt"
+) {
+
+transform(
+"😇",
+"Angyal",
+"CÓLIÁRT?! 😇✨ ANGYAALLÁ VÁLTOZTAM!"
+);
+
+unlock("a5");
+
+}
+
+
+/* HOLD */
+
+else if (
+t.includes("holdtorta")
+) {
+
+transform(
+"🌙",
+"Hold",
+"HOLDTORTA! 🌙🌌 MOST MÁR A HOLD VAGYOK!"
+);
+
+}
+
+
+/* NAP */
+
+else if (
+t.includes("nappalacsinta")
+) {
+
+transform(
+"☀️",
+"Nap",
+"NAP­PALACSINTA! ☀️🔥 RAGYOGOK!"
+);
+
+}
+
+
+/* ALIEN */
+
+else if (
+t.includes("ufo-suti") ||
+t.includes("ufo süti")
+) {
+
+transform(
+"👽",
+"Alien",
+"UFO-SÜTI?! 👽🛸 MOST MÁR ALIEN VAGYOK!"
+);
+
+}
+
+
+/* BÉKA */
+
+else if (
+t.includes("legyburger") ||
+t.includes("légyburger")
+) {
+
+transform(
+"🐸",
+"Béka",
+"NYAMM! 🐸🪰 LÉGYBURGER! BREKEKE!"
+);
+
+}
+
+
+/* ROBOT */
+
+else if (
+t.includes("robotkeksz")
+) {
+
+transform(
+"🤖",
+"Robot",
+"ROBOTKEKSZ! 🤖⚙️ RENDSZER ÁTVÁLTOZÁS!"
+);
+
+}
+
+
+/* ARANY */
+
+else if (
+t.includes("aranyfank") ||
+t.includes("aranyfánk")
+) {
+
+transform(
+"👑",
+"Aranykirály",
+"ARANYFÁNK! 👑✨ MOST MÁR ARANYKIRÁLY VAGYOK!"
+);
+
+}
+
+
+/* KŐ */
+
+else if (
+t.includes("sziklaburger")
+) {
+
+transform(
+"🪨",
+"Szikla",
+"SZIKLABURGER?! 🪨💥 KŐKEMÉNY LETTEM!"
+);
+
+}
+
+
+/* JÉG */
+
+else if (
+t.includes("jegkrem") ||
+t.includes("jégkrém")
+) {
+
+transform(
+"🧊",
+"Jég",
+"JÉGKRÉM! 🧊🥶 MEGFAGYTAM!"
+);
+
+}
+
+
+/* FELHŐ */
+
+else if (
+t.includes("felhocukor") ||
+t.includes("felhőcukor")
+) {
+
+transform(
+"☁️",
+"Felhő",
+"FELHŐCUKOR! ☁️😋 FELHŐ LETTEM!"
+);
+
+}
+
+
+/* VÍZ */
+
+else if (
+t.includes("vizgolyo") ||
+t.includes("vízgolyó")
+) {
+
+transform(
+"🌊",
+"Víz",
+"VÍZGOLYÓ! 🌊💦 MOST MÁR VÍZ VAGYOK!"
+);
+
+}
+
+
+/* VILLÁM */
+
+else if (
+t.includes("villamcukorka") ||
+t.includes("villámcukorka")
+) {
+
+transform(
+"⚡",
+"Villám",
+"VILLÁMCUKORKA! ⚡😱 ZZZZZT!"
+);
+
+}
+
+
+/* FÖLD */
+
+else if (
+t.includes("foldtorta") ||
+t.includes("földtorta")
+) {
+
+transform(
+"🌍",
+"Föld",
+"FÖLDTORTA! 🌍🍰 ÉN VAGYOK A FÖLD!"
+);
+
+}
+
+
+/* ŰR */
+
+else if (
+t.includes("galaktikus pizza")
+) {
+
+transform(
+"🚀",
+"Űr",
+"GALAKTIKUS PIZZA! 🚀🌌 IRÁNY AZ ŰR!"
+);
+
+}
+
+
+/* KACSA */
+
+else if (
+t.includes("kenyer") ||
+t.includes("kenyér")
+) {
+
+transform(
+"🦆",
+"Kacsa",
+"KENYÉR?! 🦆🍞 HÁP HÁP!"
+);
+
+}
+
+
+/* MACSKA */
+
+else if (
+t.includes("hal")
+) {
+
+transform(
+"🐱",
+"Macska",
+"HAL?! 🐱🐟 NYAMM! MIAU!"
+);
+
+}
+
+
+/* KUTYA */
+
+else if (
+t.includes("csontkeksz")
+) {
+
+transform(
+"🐶",
+"Kutya",
+"CSONTKEKSZ! 🐶🦴 VAU VAU!"
+);
+
+}
+
+
+/* DINO */
+
+else if (
+t.includes("dino-steak") ||
+t.includes("dino steak")
+) {
+
+transform(
+"🦖",
+"Dinoszaurusz",
+"DINO-STEAK?! 🦖🔥 RAAAAWR!"
+);
+
+}
+
+
+/* MAJOM */
+
+else if (
+t.includes("banan") ||
+t.includes("banán")
+) {
+
+transform(
+"🐒",
+"Majom",
+"BANÁN! 🐒🍌 UUU UUU AAA AAA!"
+);
+
+}
+
+
+/* CSIRKE */
+
+else if (
+t.includes("kukorica")
+) {
+
+transform(
+"🐔",
+"Csirke",
+"KUKORICA! 🐔🌽 KOT-KODÁÁÁ!"
+);
+
+}
+
+
+/* TEHÉN */
+
+else if (
+t.includes("fuburger") ||
+t.includes("fűburger")
+) {
+
+transform(
+"🐄",
+"Tehén",
+"FŰBURGER! 🐄🌱 MÚÚÚ!"
+);
+
+}
+
+
+/* MALAC */
+
+else if (
+t.includes("almas malackaja") ||
+t.includes("almás malackaja")
+) {
+
+transform(
+"🐷",
+"Malac",
+"ALMÁS MALACKAJA! 🐷🍎 RÖFF!"
+);
+
+}
+
+
+/* TORTA */
+
+else if (
+t.includes("óriás cupcake") ||
+t.includes("orias cupcake")
+) {
+
+transform(
+"🎂",
+"Torta",
+"ÓRIÁS CUPCAKE?! 🎂🧁 MOST MÁR TORTA VAGYOK!"
+);
+
+}
+
+
+/* CSOKI */
+
+else if (
+t.includes("csokibomba")
+) {
+
+transform(
+"🍫",
+"Csokoládé",
+"CSOKIBOMBA! 🍫💥 CSOKI LETTEM!"
+);
+
+}
+
+
+/* SAJT */
+
+else if (
+t.includes("sajttorony")
+) {
+
+transform(
+"🧀",
+"Sajt",
+"SAJTTORONY! 🧀🏰 SAJT KIRÁLY!"
+);
+
+}
+
+
+/* ALMA */
+
+else if (
+t.includes("aranyalma")
+) {
+
+transform(
+"🍎",
+"Aranyalma",
+"ARANYALMA! 🍎✨ CSILLOGOK!"
+);
+
+}
+
+
+/* KENYÉR */
+
+else if (
+t.includes("legendas kenyer") ||
+t.includes("legendás kenyér")
+) {
+
+transform(
+"🍞",
+"Legendás kenyér",
+"LEGENDÁS KENYÉR! 🍞🏆 EZT NEM LEHET FELÜLMÚLNI!"
+);
+
+}
+
+
+/* FA */
+
+else if (
+t.includes("magikus makk") ||
+t.includes("mágikus makk")
+) {
+
+transform(
+"🌳",
+"Fa",
+"MÁGIKUS MAKK! 🌳✨ FÁVÁ VÁLTAM!"
+);
+
+}
+
+
+/* VIRÁG */
+
+else if (
+t.includes("viragos suti") ||
+t.includes("virágos süti")
+) {
+
+transform(
+"🌸",
+"Virág",
+"VIRÁGOS SÜTI! 🌸🍰 VIRÁG LETTEM!"
+);
+
+}
+
+
+/* HÓ */
+
+else if (
+t.includes("hogolyo-fagyi") ||
+t.includes("hógolyó-fagyi") ||
+t.includes("hogolyo fagyi") ||
+t.includes("hógolyó fagyi")
+) {
+
+transform(
+"⛄",
+"Hóember",
+"HÓGOLYÓ-FAGYI! ⛄❄️ HÓEMBER LETTEM!"
+);
+
+}
+
+
+/* SIVATAG */
+
+else if (
+t.includes("sivatagi suti") ||
+t.includes("sivatagi süti")
+) {
+
+transform(
+"🏜️",
+"Sivatag",
+"SIVATAGI SÜTI! 🏜️☀️ HOMOK MINDENHOL!"
+);
+
+}
+
+
+/* GUMI */
+
+else if (
+t.includes("gumikerék-fánk") ||
+t.includes("gumikerék fánk") ||
+t.includes("gumkerek-fank")
+) {
+
+transform(
+"🛞",
+"Gumi",
+"GUMIKERÉK-FÁNK! 🛞🍩 GURULOK!"
+);
+
+}
+
+
+/* TELEFON */
+
+else if (
+t.includes("okostelefon-szendvics") ||
+t.includes("okostelefon szendvics")
+) {
+
+transform(
+"📱",
+"Telefon",
+"OKOSTELEFON-SZENDVICS! 📱🥪 CSÖRÖG A HASAM!"
+);
+
+}
+
+
+/* TV */
+
+else if (
+t.includes("tv-suti") ||
+t.includes("tv süti")
+) {
+
+transform(
+"📺",
+"TV",
+"TV-SÜTI! 📺🍪 MOST MÁR ÉN VAGYOK A TV!"
+);
+
+}
+
+
+/* KÖNYV */
+
+else if (
+t.includes("konyvtorta") ||
+t.includes("könyvtorta")
+) {
+
+transform(
+"📖",
+"Könyv",
+"KÖNYVTORTA! 📖🍰 TELE VAGYOK TÖRTÉNETEKKEL!"
+);
+
+}
+
+
+/* CERUZA */
+
+else if (
+t.includes("ceruzas suti") ||
+t.includes("ceruzás süti")
+) {
+
+transform(
+"✏️",
+"Ceruza",
+"CERUZÁS SÜTI! ✏️🍪 RAJZOLJUNK!"
+);
+
+}
+
+
+/* LABDA */
+
+else if (
+t.includes("focilabda-suti") ||
+t.includes("focilabda süti")
+) {
+
+transform(
+"⚽",
+"Focilabda",
+"FOCILABDA-SÜTI! ⚽🍪 GÓÓÓÓL!"
+);
+
+}
+
+
+/* BICIKLI */
+
+else if (
+t.includes("biciklikeksz")
+) {
+
+transform(
+"🚲",
+"Bicikli",
+"BICIKLIKEKSZ! 🚲🍪 TEKERÉS!"
+);
+
+}
+
+
+/* AUTÓ */
+
+else if (
+t.includes("autoburger") ||
+t.includes("autóburger")
+) {
+
+transform(
+"🚗",
+"Autó",
+"AUTÓBURGER! 🚗🍔 BRÜM BRÜM!"
+);
+
+}
+
+
+/* REPÜLŐ */
+
+else if (
+t.includes("repulos szendvics") ||
+t.includes("repülős szendvics")
+) {
+
+transform(
+"✈️",
+"Repülő",
+"REPÜLŐS SZENDVICS! ✈️🥪 FELSZÁLLÁS!"
+);
+
+}
+
+
+/* HAJÓ */
+
+else if (
+t.includes("hajotorta") ||
+t.includes("hajótorta")
+) {
+
+transform(
+"🚢",
+"Hajó",
+"HAJÓTORTA! 🚢🍰 VITORLÁZUNK!"
+);
+
+}
+
+
+/* ZENE */
+
+else if (
+t.includes("hangjegyes cukorka")
+) {
+
+transform(
+"🎵",
+"Zene",
+"HANGJEGYES CUKORKA! 🎵🍬 ZENÉVÉ VÁLTAM!"
+);
+
+}
+
+
+/* SZIVÁRVÁNY */
+
+else if (
+t.includes("szivarvanytorta") ||
+t.includes("szivárványtorta")
+) {
+
+transform(
+"🌈",
+"Szivárvány",
+"SZIVÁRVÁNYTORTA! 🌈🎂 MILYEN SZÍNES!"
+);
+
+}
+
+
+/* SZELLEM */
+
+else if (
+t.includes("szellemfagyi") ||
+t.includes("szellemfagyi")
+) {
+
+transform(
+"👻",
+"Szellem",
+"SZELLEM FAGYI! 👻🍦 BÚÚÚ!"
+);
+
+}
+
+
+/* VÁMPÍR */
+
+else if (
+t.includes("vampirfank") ||
+t.includes("vámpírfánk")
+) {
+
+transform(
+"🧛",
+"Vámpír",
+"VÁMPÍRFÁNK! 🧛🍩 HÚÚÚ!"
+);
+
+}
+
+
+/* VARÁZSLÓ */
+
+else if (
+t.includes("varazssuti") ||
+t.includes("varázssüti")
+) {
+
+transform(
+"🧙",
+"Varázsló",
+"VARÁZSSÜTI! 🧙✨ ABRAKADABRA!"
+);
+
+}
+
+
+/* PÉNZ */
+
+else if (
+t.includes("penzes palacsinta") ||
+t.includes("pénzes palacsinta")
+) {
+
+transform(
+"💰",
+"Pénz",
+"PÉNZES PALACSINTA! 💰🥞 GAZDAG VAGYOK!"
+);
+
+}
+
+
+/* GYÉMÁNT */
+
+else if (
+t.includes("gyemantcukorka") ||
+t.includes("gyémántcukorka")
+) {
+
+transform(
+"💎",
+"Gyémánt",
+"GYÉMÁNTCUKORKA! 💎🍬 CSILLOGOK!"
+);
+
+}
+
+
+/* KAKTUSZ */
+
+else if (
+t.includes("kaktusztorta")
+) {
+
+transform(
+"🌵",
+"Kaktusz",
+"KAKTUSZTORTA! 🌵🎂 AUCS!"
+);
+
+}
+
+
+/*
+=========================================
+WC
+=========================================
+*/
+
+else if (
+t.includes("wc leves") ||
+t.includes("wc") ||
+t.includes("vece leves") ||
+t.includes("vécé leves") ||
+t.includes("toilet")
+) {
+
+transform(
+"🚽",
+"WC",
+"WC LEVES?! 🚽😂 MOST MÁR ÉN VAGYOK A WC!"
+);
+
+unlock("a3");
+
+}
+
+
+/*
+=========================================
+RÉGI EGYSZERŰ TRIGGEREK IS MŰKÖDNEK
+=========================================
+*/
+
+else if (
+t.includes("béka") ||
+t.includes("beka")
+) {
+
+transform(
+"🐸",
+"Béka",
+"BREKEKE! 🐸"
+);
+
+}
+
+else if (
+t.includes("alien") ||
+t.includes("ufo")
+) {
+
+transform(
+"👽",
+"Alien",
+"ALIEN LETTEM! 👽🛸"
+);
+
+}
+
+else if (
+t.includes("robot")
+) {
+
+transform(
+"🤖",
+"Robot",
+"ÉN VAGYOK A ROBOT! 🤖⚙️"
+);
+
+}
+
+else if (
+t.includes("arany") ||
+t.includes("gold")
+) {
+
+transform(
+"👑",
+"Arany",
+"ARANY LETTEM! 👑✨"
+);
+
+}
+
+else if (
+t.includes("kő") ||
+t.includes("ko ") ||
+t.includes("szikla")
+) {
+
+transform(
+"🪨",
+"Kő",
+"KŐKEMÉNY VAGYOK! 🪨"
+);
+
+}
+
+else if (
+t.includes("jég") ||
+t.includes("jeg")
+) {
+
+transform(
+"🧊",
+"Jég",
+"BRRR! MEGFAGYTAM! 🧊"
+);
+
+}
+
+else if (
+t.includes("felhő") ||
+t.includes("felho")
+) {
+
+transform(
+"☁️",
+"Felhő",
+"FELHŐ LETTEM! ☁️"
+);
+
+}
+
+else if (
+t.includes("víz") ||
+t.includes("viz")
+) {
+
+transform(
+"🌊",
+"Víz",
+"CSOBBANÁS! 🌊"
+);
+
+}
+
+else if (
+t.includes("villám") ||
+t.includes("villam")
+) {
+
+transform(
+"⚡",
+"Villám",
+"ZZZZT! ⚡"
+);
+
+}
+
+else {
+
+statusText.textContent =
+"NYAMM! 🍽️ Megettem: " + food + " 😋";
+
+addLog(
+"🍽️ Bot megette: " + food
+);
+
+}
+
+input.value = "";
+
+}
+
+
+/*
+=========================================
+GYORS KAJÁK
+=========================================
+*/
+
+function quickFood(food) {
+
+document.getElementById("foodInput").value = food;
+
+feedBot();
+
+}
+
+
+/*
+=========================================
+INDULÁS
+=========================================
+*/
+
+addLog("🤖 Az Őrült Bot elindult!");
+
+addLog("🍕 Adj neki valamit az Etetés menüben!");
+
+</script>
+
+</body>
+</html>
